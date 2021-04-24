@@ -12,15 +12,15 @@ router.post('/usuarios', UsuariosController.store);
 router.post('/usuario/login', UsuariosController.login);
 
 /* Ao utilizar essa sintaxe todas as rotas definidas abaixo terão que passar pelo middleware */
-router.use(authMiddleware);
-    router.get('/usuarios', authMiddleware, UsuariosController.index);
-    router.put('/usuario/:usuario_id', UsuariosController.update);
-    router.delete('/usuario/:usuario_id', UsuariosController.delete);
+//router.use(authMiddleware);
+router.get('/usuarios', authMiddleware, UsuariosController.index);
+router.put('/usuario/:usuario_id', authMiddleware, UsuariosController.update);
+router.delete('/usuario/:usuario_id', authMiddleware, UsuariosController.delete);
 
-    router.get('/contabilidade/:usuario_id', ContabilidadesController.index);
-    router.post('/contabilidade/:usuario_id', ContabilidadesController.store);
-    router.put('/contabilidade/:id', ContabilidadesController.update);
-    router.delete('/contabilidade/:id', ContabilidadesController.delete);
+router.get('/contabilidade/:usuario_id', authMiddleware, ContabilidadesController.index);
+router.post('/contabilidade/:usuario_id', authMiddleware, ContabilidadesController.store);
+router.put('/contabilidade/:id', authMiddleware, ContabilidadesController.update);
+router.delete('/contabilidade/:id', authMiddleware, ContabilidadesController.delete);
 
 
 

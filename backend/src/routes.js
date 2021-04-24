@@ -1,9 +1,13 @@
 const express = require('express');
 const UsuariosController = require('./controllers/UsuariosController');
+const authMiddleware = require('./middlewares/auth');
 
 const router = express.Router();
 
-router.get('/usuarios', UsuariosController.index);
+/* Antes de chamar a index ira passar pelo middleware,
+obs: deixei apenas na rota da function index pois o token
+é gerado no store e no login */
+router.get('/usuarios', authMiddleware, UsuariosController.index);
 router.post('/usuarios', UsuariosController.store);
 router.post('/usuario/login', UsuariosController.login);
 router.put('/usuario/:usuario_id', UsuariosController.update);

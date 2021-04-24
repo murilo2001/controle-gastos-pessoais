@@ -105,7 +105,8 @@ export default {
                     nome: response.data.usuario.nome,
                     email: response.data.usuario.email
                 };
-                localStorage.setItem('user', JSON.stringify(user))
+                localStorage.setItem('user', JSON.stringify(user));
+                this.$router.push('/');
             }).catch(error => {
             console.error('error: ', error);
             });

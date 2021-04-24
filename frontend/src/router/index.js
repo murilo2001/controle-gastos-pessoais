@@ -1,10 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Home from '@/views/Home';
-import Login from '@/views/login/Index';
-import ControleGastos from '@/views/controleGastos/Index';
-
 Vue.use(Router);
 
 const router = new Router({
@@ -13,23 +9,29 @@ const router = new Router({
         {
             name: 'login',
             path: '/login',
-            component: Login,
+            component: () => import('@/views/login/Index'),
         },
         {
-            name: 'home',
-            path: '/',
-            component: Home,
-            meta: {
+          path: '/',
+          component: () => import('@/views/Index'),
+          children: [
+            {
+              name: 'Home',
+              path: '',
+              component: () => import('@/views/Home'),
+              meta: {
                 requiresAuth: true,
                 breadcrumb: [
                   { name: "Dashboard"}
                 ]
               },
+            },
+          ],
         },
         {
-            name: 'controle-gastos',
+            name: 'Contabilidade',
             path: '/controle-gastos',
-            component: ControleGastos,
+            component: () => import('@/views/controleGastos/Index'),
             meta: {
                 requiresAuth: true,
                 breadcrumb: [

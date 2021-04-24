@@ -22,7 +22,6 @@ module.exports = {
     }, 
 
     async store(req, res) {
-
         try {
             const { usuario_id } = req.params;
             const { nome, tipo, data, valor } = req.body;

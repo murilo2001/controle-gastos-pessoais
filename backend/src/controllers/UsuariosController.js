@@ -1,9 +1,10 @@
 const Usuario = require ('../models/Usuario');
+const bcrypt = require ('bcryptjs');
 
 module.exports = {
 
     async login(req, res) {
-        const [ senha, email, is_logged ] = req.body;
+        const { senha, email, is_logged } = req.body;
 
         const usuario = await Usuario.findOne({ where: { email } });
 
@@ -14,7 +15,8 @@ module.exports = {
             });
         }
 
-        if (!bcrypt.compareSync(password, usuario.senha)) {
+        /* compara a senha hash passada no body da req com a senha do usuario do banco */
+        if (!bcrypt.compareSync(senha, usuario.senha)) {
             return res.status(400).send({
                 status: 0,
                 message: 'E-mail ou senha incerreto!'
@@ -22,6 +24,24 @@ module.exports = {
         };
 
         const usuario_id = usuario.id;
+
+        /* atualiza coluna is_logged para true para identificar usuario logado */
+        await Usuario.update({
+            is_logged
+        }, {
+            where: {
+                id: usuario_id
+            }
+        });
+
+        /* ao colocar senha undefined ira ocultar a senha no response (200) */
+        usuario.senha = undefined;
+
+        return res.status(200).send({
+            status: 1,
+            message: "Usuario logado com sucesso!",
+            usuario
+        })
 
 
     },

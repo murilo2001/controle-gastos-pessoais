@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/usuarios', UsuariosController.index);
 router.post('/usuarios', UsuariosController.store);
+router.post('/usuario/login', UsuariosController.login);
 router.put('/usuario/:usuario_id', UsuariosController.update);
 router.delete('/usuario/:usuario_id', UsuariosController.delete);
 

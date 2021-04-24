@@ -19,6 +19,10 @@ class Usuario extends Model {
             }
         })
     }
+
+    static associate(models) {
+        this.hasMany(models.Contabilidade, { foreignKey: 'usuario_id', as: 'contabilidade'}); /* hasMany = tem muitos */
+    }
 }
 
 module.exports = Usuario;

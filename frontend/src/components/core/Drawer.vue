@@ -1,11 +1,33 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer
-      v-model="drawer"
       app
       clipped
+      dark
+      :expand-on-hover="expandOnHover"
+      mobile-break-point="960"
+      mini-variant-width="80"
+      width="300"
+      v-bind="$attrs"
     >
       <v-list dense>
+        <v-list-item>
+          <v-list-item-content
+            align="center"
+            justify="center"
+          >
+            <router-link to='/'>
+              <v-img
+                width="150"
+                height="50"
+                src="@/assets/example_logo.png"
+              />
+            </router-link>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider class="mb-1" style="margin-top:10px" />
+
         <v-list-item @click="navegateTo('Home')">
           <v-list-item-action>
             <v-icon>mdi-widgets</v-icon>
@@ -21,21 +43,41 @@
             <v-icon>mdi-account-cash-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            Contabilidade
+            <v-list-item-title>
+              Contabilidade
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <v-divider class="mb-1" style="margin-top:10px" />
+        <div style="position:fixed; bottom:0px; left: 50%; transform: translate(-50%, 0);">
+          <div
+            align="center"
+            justify="center"
+          >
+            <v-btn
+              color="white"
+              dark
+              icon
+              min-width="0"
+              href="https://www.linkedin.com/in/murilo-jose/" target="_blank"
+            >
+              <v-icon
+                size="25"
+                color="white"
+              >
+                mdi-linkedin
+              </v-icon>
+            </v-btn>
+          </div>
+        </div>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      clipped-left
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
-    </v-app-bar>
-
     <v-content>
+      <div class="expand-comp">
+        <v-app-bar-nav-icon style="margin-left:10px; background-color:#efefef; border:solid; border-color:#e2e2e2; border-radius:50%; width:40px; height:40px;" @click.native="expandOnHover = !expandOnHover"></v-app-bar-nav-icon><span style="font-size: 1.25rem; margin-left:5px;">Dashboard</span>
+      </div>
       <v-container
         fluid
         fill-height
@@ -44,30 +86,12 @@
           align-center
           justify-center
         >
-          <v-flex shrink>
+          <v-flex shrink style="width: 98%; margin-top:-55px;">
             <router-view />
-            <v-tooltip right>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  icon
-                  large
-                  href="https://codepen.io/johnjleider/pen/bXNzZL"
-                  target="_blank"
-                  v-on="on"
-                >
-                  <v-icon large>mdi-codepen</v-icon>
-                </v-btn>
-              </template>
-              <span>Codepen</span>
-            </v-tooltip>
           </v-flex>
         </v-layout>
       </v-container>
     </v-content>
-
-    <v-footer app>
-      <span>&copy; 2019</span>
-    </v-footer>
   </v-app>
 </template>
 
@@ -79,7 +103,7 @@ export default {
 
     data () {
       return {
-        drawer: true /* Inicia a aplicação com o Drawer Visivel */
+        expandOnHover: true
       }
     },
     methods: {
@@ -91,3 +115,12 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.expand-comp{
+  height: 86px;
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+}
+</style>

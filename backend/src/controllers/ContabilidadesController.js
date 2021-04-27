@@ -1,5 +1,6 @@
 const Usuario = require ('../models/Usuario');
 const Contabilidade = require ('../models/Contabilidade');
+const KnexDataBase = require ('../config/knex-database');
 
 module.exports = {
 
@@ -95,6 +96,48 @@ module.exports = {
            }
         } catch (err) {
             return res.status(400).json({ error: err });
+        }
+    },
+
+    async getListDateContabilidadesUser(req, res) {
+        try {
+            const id = req.params.usuario_id;
+
+            KnexDataBase.select(KnexDataBase.raw(["YEAR(data) as Ano", "MONTH(data) as Mes"]))
+            .where({usuario_id: id})
+            .table("contabilidades").then(data => {
+                return res.status(200).send(data);
+            }).catch(err => {
+                return res.status(400).json({ error: err });
+            });
+
+        } catch (err) {
+            return res.status(400).json({ error: err});
+        }
+    },
+
+    async getContabilidadePerMonthYear(req, res) {
+        try {
+            const usuario_id = req.params.usuario_id;
+            const mes = req.params.mes;
+            const ano = req.params.ano;
+
+            KnexDataBase.select("*").whereRaw(`usuario_id = ${usuario_id} AND MONTH(data) = ${mes} AND YEAR(data) = ${ano}`)
+            .table("contabilidades").then(data => {
+                
+                if (data == "" || data == null) {
+                    return res.status(200).send({message: "Nenhuma contabilidade encontrada para essa data"});
+                };
+
+                return res.status(200).send(data);
+
+            }).catch(err => {
+                return res.status(400).json({ error: err });
+            });
+
+
+        } catch (err) {
+            return res.status(400).json({ error: err});
         }
     }
 }

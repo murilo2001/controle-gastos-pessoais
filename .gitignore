@@ -2,6 +2,7 @@
 node_modules
 /frontend/dist
 /backend/src/config/database.js
+/backend/src/config/knex-database.js
 
 
 # local env files

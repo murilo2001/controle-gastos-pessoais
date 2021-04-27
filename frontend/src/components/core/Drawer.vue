@@ -85,10 +85,11 @@
         <v-layout
           align-center
           justify-center
+          style="margin-top: -30px;"
         >
-          <v-flex shrink style="width: 98%; margin-top:-55px;">
+          <!-- <v-flex shrink style="width: 98%; margin-top:-55px; border:solid 1px blue;"> -->
             <router-view />
-          </v-flex>
+          <!-- </v-flex> -->
         </v-layout>
       </v-container>
     </v-content>

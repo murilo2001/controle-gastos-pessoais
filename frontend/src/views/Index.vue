@@ -1,5 +1,7 @@
 <template>
-  <drawer />
+  <v-app>
+    <drawer />
+  </v-app>
 </template>
 
 <script>

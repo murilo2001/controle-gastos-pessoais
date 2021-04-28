@@ -2,7 +2,6 @@
 <v-container
   tag="section"
   fluid
-  class="teste"
   style="height: 100%;"
   >
     <v-row dense>
@@ -11,28 +10,19 @@
           class="mx-auto"
           min-width="300"
           color="white"
-        > <!-- outlined -->
+        >
           <v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title class="headline mb-1">
                 Resumo
               </v-list-item-title>
-              <v-list-item-subtitle>abr/2021 -> 20% positivo</v-list-item-subtitle>
+              <v-list-item-subtitle>abr/2021</v-list-item-subtitle>
             </v-list-item-content>
             <span class="img-card-border" style="background-color: #6c5ce7;">
               <v-img class="img-card-content" src="https://res.cloudinary.com/cschroeder/image/upload/v1542293711/Icons/users.png" />
             </span>
           </v-list-item>
           <br><v-divider light></v-divider>
-          <!-- <v-card-actions>
-            <v-btn
-              outlined
-              rounded
-              text
-            >
-              Button
-            </v-btn>
-          </v-card-actions> -->
         </v-card>
       </v-col>
       <v-col>
@@ -46,22 +36,13 @@
               <v-list-item-title class="headline mb-1">
                 Comparativo
               </v-list-item-title>
-              <v-list-item-subtitle>...</v-list-item-subtitle>
+              <v-list-item-subtitle>2021</v-list-item-subtitle>
             </v-list-item-content>
             <span class="img-card-border" style="background-color: #0984e3;">
               <v-img class="img-card-content" src="https://res.cloudinary.com/cschroeder/image/upload/v1542299607/Icons/NewOrder_256.png?v=3" />
             </span>
           </v-list-item>
           <br><v-divider light></v-divider>
-          <!-- <v-card-actions>
-            <v-btn
-              outlined
-              rounded
-              text
-            >
-              Button
-            </v-btn>
-          </v-card-actions> -->
         </v-card>
       </v-col>
     </v-row>
@@ -113,7 +94,7 @@ export default {
   components: {
     GraficoComparativo: () => import('@/components/general/graficos/GraficoComparativo.vue'),
     GraficoResumoMes: () => import('@/components/general/graficos/GraficoResumoMes.vue'),
-    ContabilidadeHistorico: () => import('@/components/contabilidade/Historico.vue'),
+    ContabilidadeHistorico: () => import('@/components/contabilidade/HistoricoTable.vue'),
   },
 
 }
@@ -137,9 +118,8 @@ export default {
 }
 
 .graph-size {
-  max-width: 600px;
+  max-width: 575px;
   max-height: 500px;
-  /* margin:  150px auto; */
 }
 
 </style>

@@ -6,14 +6,14 @@ export default {
 
     apiCall() {
         const baseURL = 'http://localhost:3333';
-        const token = tokens; 
+        const token = tokens.access_token; 
         
         let call = axios.create({
             baseURL,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}` 
+                'Authorization': `Bearer ${token}`
             },
             timeout: 60 * 4 * 1000
         });

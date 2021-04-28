@@ -29,15 +29,21 @@ const router = new Router({
           ],
         },
         {
-            name: 'Contabilidade',
-            path: '/controle-gastos',
-            component: () => import('@/views/controleGastos/Index'),
-            meta: {
-                requiresAuth: true,
-                breadcrumb: [
-                  { name: "Contabilidade"}
-                ]
-              },
+            path: '/contabilidade',
+            component: () => import('@/views/Index'),
+            children: [
+              {
+                name: 'Contabilidade',
+                path: '/contabilidade',
+                component: () => import('@/views/contabilidade/Historico'),
+                meta: {
+                  requiresAuth: true,
+                  breadcrumb: [
+                    { name: "Contabilidade"}
+                  ]
+                },
+              }
+            ],
         }
     ]
 });

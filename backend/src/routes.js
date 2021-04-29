@@ -21,5 +21,8 @@ router.put('/contabilidade/:id', authMiddleware, ContabilidadesController.update
 router.delete('/contabilidade/:id', authMiddleware, ContabilidadesController.delete);
 router.get('/contabilidades/dates/:usuario_id', authMiddleware, ContabilidadesController.getListDateContabilidadesUser);
 router.get('/contabilidade/:usuario_id/:mes/:ano', authMiddleware, ContabilidadesController.getContabilidadePerMonthYear);
+router.get('/contabilidade/last-month-year/:usuario_id', authMiddleware, ContabilidadesController.getLastMonthYear);
+router.get('/contabilidade/grafico-comparativo/:usuario_id', authMiddleware, ContabilidadesController.getContabilidadeUserMonthsComparative);
+router.get('/contabilidade/grafico-resumo/:usuario_id/:ano/:mes', authMiddleware, ContabilidadesController.getContabilidadeUserSummaryLastMonth);
 
 module.exports = router;

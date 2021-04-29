@@ -30,7 +30,7 @@ module.exports = (req, res, next) => {
         return res.status(401).send({error: 'Token mal formatado'});
     }
 
-    /* jsw ira validar o token com base no secret e gerar uma função, caso error = err, caso valido = decoded */
+    /* jwt ira validar o token com base no secret e gerar uma função, caso error = err, caso valido = decoded */
     jwt.verify(token, authConfig.secret, (err, decoded) => {
         if (err) return res.status(401).send ({error: 'Token invalido'});
 

@@ -139,5 +139,88 @@ module.exports = {
         } catch (err) {
             return res.status(400).json({ error: err});
         }
-    }
+    },
+
+    async getContabilidadeUserMonthsComparative(req, res) {
+        try {
+            const id = req.params.usuario_id;
+
+            KnexDataBase.select(KnexDataBase.raw(["SUM(Valor) as total", "MONTH(data) as mes", "YEAR(data) as ano", "tipo"]))
+            .where({usuario_id: id})
+            .limit(12)
+            .table("contabilidades")
+            .orderBy('Ano', 'asc')
+            .orderBy('Mes', 'asc')
+            .groupBy('Mes')
+            .groupBy('Ano')
+            .groupBy('tipo').then(data => {
+
+                if (data == "" || data == null) {
+                    return res.status(200).send({message: "Nenhuma informação correspodente encontrada"});
+                };
+
+                return res.status(200).send(data);
+
+            }).catch(err => {
+                return res.status(400).json({ error: err });
+            });
+
+
+        } catch (err) {
+            return res.status(400).json({ error: err});
+        }
+    },
+
+    async getLastMonthYear(req, res) {
+        try {
+            const id = req.params.usuario_id;
+            
+            KnexDataBase.select(KnexDataBase.raw(["YEAR(data) as ano", "MONTH(data) as mes"]))
+            .where({usuario_id: id})
+            .limit(1)
+            .table("contabilidades")
+            .orderBy('Ano', 'desc')
+            .orderBy('Mes', 'desc')
+            .then(data => {
+
+                if (data == "" || data == null) {
+                    return res.status(200).send({message: "Nenhuma informação correspodente encontrada"});
+                };
+
+                return res.status(200).send(data);
+
+            }).catch(err => {
+                return res.status(400).json({ error: err });
+            });
+
+
+        } catch (err) {
+            return res.status(400).json({ error: err});
+        }
+    },
+
+    async getContabilidadeUserSummaryLastMonth(req, res) {
+        try {
+            const id = req.params.usuario_id;
+            const ano = req.params.ano;
+            const mes = req.params.mes;
+
+            KnexDataBase.select(["nome", "valor"]).whereRaw(`usuario_id = ${id} AND YEAR(data) = ${ano} AND MONTH(data) = ${mes}`).table("contabilidades")
+            .then(data => {
+
+                if (data == "" || data == null) {
+                    return res.status(200).send({message: "Nenhuma informação correspodente encontrada"});
+                };
+
+                return res.status(200).send(data);
+
+            }).catch(err => {
+                return res.status(400).json({ error: err });
+            });
+
+
+        } catch (err) {
+            return res.status(400).json({ error: err});
+        }
+    },
 }

@@ -55,7 +55,7 @@
           align="center"
           justify="center"
         >
-          <grafico-resumo-mes class="graph-size" />
+          <grafico-resumo-mes class="graph-size" :items="arrItemsGraficoResumo" />
         </v-card>
       </v-col>
       <v-col>
@@ -66,7 +66,7 @@
           align="center"
           justify="center"
         >
-          <grafico-comparativo class="graph-size" />
+            <grafico-comparativo class="graph-size" :items="arrItemsGraficoComparativo" />
         </v-card>
       </v-col>
     </v-row>
@@ -80,7 +80,6 @@
           align="center"
           justify="center"
         >
-          <contabilidade-historico />
         </v-card>
       </v-col>
     </v-row>
@@ -89,13 +88,99 @@
 </template>
 
 <script>
+import GraficosService from '../services/GraficosService';
 export default {
   name: 'Home',
   components: {
     GraficoComparativo: () => import('@/components/general/graficos/GraficoComparativo.vue'),
     GraficoResumoMes: () => import('@/components/general/graficos/GraficoResumoMes.vue'),
-    ContabilidadeHistorico: () => import('@/components/contabilidade/HistoricoTable.vue'),
   },
+  
+  data () {
+    return {
+      arrItemsGraficoComparativo: [],
+      arrItemsGraficoResumo: [],
+      monthLastRecordRegistered: undefined,
+      yearLastRecordRegistered: undefined
+    }
+  },
+
+  async mounted () {
+    this.fillArrItemsGraficoComparativo(this.usuario.id);
+    await this.fillDataLastRecordRegistered(this.usuario.id);
+    this.fillArrItemsGraficoResumo(this.usuario.id, this.yearLastRecordRegistered, this.monthLastRecordRegistered);
+  },
+
+  methods: {
+    fillArrItemsGraficoComparativo (usuario_id) {
+      GraficosService.getContabilidadeUserMonthsComparative(usuario_id).then(response => {
+        response.data.forEach(info => {
+          this.arrItemsGraficoComparativo.push({
+            mes: this.getNomeMesPorExtenso(info.mes),
+            ano: info.ano,
+            total: parseInt(info.total),
+            tipo: info.tipo
+          });
+        });
+      }).catch(error => {
+        console.error('error: ', error);
+      });
+    },
+
+    getNomeMesPorExtenso (mes) {
+      mes = parseInt(mes);
+      switch (mes) {
+        case 1:
+          return 'Janeiro';
+        case 2:
+          return 'Fevereiro';
+        case 3:
+          return 'Março';
+        case 4:
+          return 'Abril';
+        case 5:
+          return 'Maio';
+        case 6:
+          return 'Junho';
+        case 7:
+          return 'Julho';
+        case 8:
+          return 'Agosto';
+        case 9:
+          return 'Setembro'
+        case 10:
+          return 'Outubro';
+        case 11:
+          return 'Novembro';
+        case 12:
+          return 'Dezembro';
+      }
+    },
+
+    async fillDataLastRecordRegistered (usuario_id) {
+      await GraficosService.getLastMonthYear(usuario_id).then(response => {
+        this.yearLastRecordRegistered = response.data[0].ano;
+        this.monthLastRecordRegistered = response.data[0].mes;
+      }).catch(error => {
+        console.error('error: ', error);
+      });
+    },
+
+    fillArrItemsGraficoResumo (usuario_id, ano, mes) {
+      GraficosService.getContabilidadeUserSummaryLastMonth(usuario_id, ano, mes).then(response => {
+      this.arrItemsGraficoResumo = response.data;
+      }).catch(error => {
+        console.error('error: ', error);
+      });
+    },
+
+  },
+
+  computed: {
+    usuario () {
+      return JSON.parse(localStorage.getItem('user'));
+    }
+  }
 
 }
 </script>

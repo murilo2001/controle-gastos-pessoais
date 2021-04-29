@@ -4,24 +4,38 @@
     fluid
     style="height: 100%;"
   >
-  <v-select
-    :items="arrDatesMesAno"
-    label="Mês / Ano"
-    v-model="dateSelected"
-    @change="rechargeTable()"
-  >
-    <template v-slot:item="{ item, attrs, on }">
-      <v-list-item
-        v-bind="attrs"
-        v-on="on"
-      >
-        <v-list-item-title
-          :id="attrs['aria-labelledby']"
-          v-text="item"
-        ></v-list-item-title>
-      </v-list-item>
-    </template>
-  </v-select>
+    <v-row dense>
+      <v-col>
+          <v-select
+            :items="arrDatesMesAno"
+            label="Mês / Ano"
+            v-model="dateSelected"
+            @change="rechargeTable()"
+          >
+          <template v-slot:item="{ item, attrs, on }">
+            <v-list-item
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-list-item-title
+                :id="attrs['aria-labelledby']"
+                v-text="item"
+              ></v-list-item-title>
+            </v-list-item>
+          </template>
+          </v-select>
+      </v-col>
+      <v-col>
+        <v-card
+          class="mx-auto"
+          min-width="300"
+          color="white"
+        >
+
+        </v-card>
+      </v-col>
+    </v-row>
+
   <tabela-historico :items="itemsTable" />
   </v-container>
 </template>
@@ -70,6 +84,7 @@
               let dataConvertedSplit = dataConverted.split(' ');
               dataConverted = dataConvertedSplit[0].trim();
               this.itemsTable.push({
+                id: item.id,
                 nome: item.nome,
                 tipo: item.tipo,
                 data: dataConverted,

@@ -5,26 +5,35 @@ import { Bar } from 'vue-chartjs';
 export default {
     extends: Bar,
 
-    mounted() {
-        this.renderChart(this.chartdata, this.options)
+    props: {
+        items: {
+            type: Array,
+            required: true
+        }
+    },
+
+    async mounted() {
+        await this.fillArr();
+        this.renderChart(this.chartdata, this.options);
     },
     data() {
         return {
+            labelsExtract: [],
+            dataReceitasExtract: [],
+            dataDespesasExtract: [],
             chartdata: {
-                labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                labels: [],
                 datasets: [
                     {
                         label: 'Receitas R$',
-                        data: [1200, 1400, 2000, 1300, 1600, 1550, 3000, 2100, 2500, 4000, 1500, 1600],
+                        data: [],
                         backgroundColor: 'rgb(250, 170, 191)',
-                        // borderColor: 'rgb(255, 38, 38)',
                         borderWidth: 1
                     },
                     {
                         label: 'Despesas R$',
-                        data: [900, 1600, 1000, 1600, 1400, 1000, 1200, 1000, 800, 2000, 1300, 1000],
+                        data: [],
                         backgroundColor: 'rgb(152, 199, 251)',
-                        // borderColor: 'rgb(50, 149, 255)',
                         borderWidth: 1
                     }
                 ]
@@ -34,10 +43,24 @@ export default {
                 maintainAspectRatio: false
             }
         };
+    },
+
+    methods: {
+        async fillArr() {
+            this.items.forEach((item) => {
+                let label = item.mes+"/"+item.ano;
+                let checkExistenceArray = this.chartdata.labels.indexOf(label);
+                if (checkExistenceArray == -1) { 
+                    this.chartdata.labels.push(label);
+                }
+
+                if (item.tipo == "receita") {
+                    this.chartdata.datasets[0].data.push(item.total);
+                } else {
+                    this.chartdata.datasets[1].data.push(item.total);
+                }
+            });
+        }
     }
 }
 </script>
-
-<style>
-
-</style>

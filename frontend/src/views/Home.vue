@@ -18,8 +18,21 @@
               </v-list-item-title>
               <v-list-item-subtitle>abr/2021</v-list-item-subtitle>
             </v-list-item-content>
-            <span class="img-card-border" style="background-color: #6c5ce7;">
-              <v-img class="img-card-content" src="https://res.cloudinary.com/cschroeder/image/upload/v1542293711/Icons/users.png" />
+            <span class="btn-card-border" style="background-color: #6c5ce7;">
+              <v-btn
+                class="btn-card-content"
+                color="white"
+                dark
+                icon
+                min-width="0"
+              >
+                <v-icon
+                  size="54"
+                  color="white"
+                >
+                  mdi-file-eye
+                </v-icon>
+              </v-btn>
             </span>
           </v-list-item>
           <br><v-divider light></v-divider>
@@ -38,8 +51,21 @@
               </v-list-item-title>
               <v-list-item-subtitle>2021</v-list-item-subtitle>
             </v-list-item-content>
-            <span class="img-card-border" style="background-color: #0984e3;">
-              <v-img class="img-card-content" src="https://res.cloudinary.com/cschroeder/image/upload/v1542299607/Icons/NewOrder_256.png?v=3" />
+            <span class="btn-card-border" style="background-color: #0984e3;">
+              <v-btn
+                class="btn-card-content"
+                color="white"
+                dark
+                icon
+                min-width="0"
+              >
+                <v-icon
+                  size="54"
+                  color="white"
+                >
+                  mdi-microsoft-excel
+                </v-icon>
+              </v-btn>
             </span>
           </v-list-item>
           <br><v-divider light></v-divider>
@@ -106,13 +132,13 @@ export default {
   },
 
   async mounted () {
-    this.fillArrItemsGraficoComparativo(this.usuario.id);
+    await this.fillArrItemsGraficoComparativo(this.usuario.id);
     await this.fillDataLastRecordRegistered(this.usuario.id);
-    this.fillArrItemsGraficoResumo(this.usuario.id, this.yearLastRecordRegistered, this.monthLastRecordRegistered);
+    await this.fillArrItemsGraficoResumo(this.usuario.id, this.yearLastRecordRegistered, this.monthLastRecordRegistered);
   },
 
   methods: {
-    fillArrItemsGraficoComparativo (usuario_id) {
+    async fillArrItemsGraficoComparativo (usuario_id) {
       GraficosService.getContabilidadeUserMonthsComparative(usuario_id).then(response => {
         response.data.forEach(info => {
           this.arrItemsGraficoComparativo.push({
@@ -166,7 +192,7 @@ export default {
       });
     },
 
-    fillArrItemsGraficoResumo (usuario_id, ano, mes) {
+    async fillArrItemsGraficoResumo (usuario_id, ano, mes) {
       GraficosService.getContabilidadeUserSummaryLastMonth(usuario_id, ano, mes).then(response => {
       this.arrItemsGraficoResumo = response.data;
       }).catch(error => {
@@ -186,14 +212,14 @@ export default {
 </script>
 
 <style scoped>
-.img-card-border{
+.btn-card-border{
   border-radius: 6px;
   height: 80px;
   width: 80px;
   position: relative
 }
 
-.img-card-content {
+.btn-card-content {
   width: 56px;
   height: 56px;
   top: 50%;

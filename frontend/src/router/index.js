@@ -44,7 +44,32 @@ const router = new Router({
                 },
               }
             ],
-        }
+        },
+        {
+          path: '/perfil',
+          component: () => import('@/views/Index'),
+          children: [
+            {
+              name: 'Perfil',
+              path: '/perfil',
+              component: () => import('@/views/perfil/Edit.vue'),
+              meta: {
+                requiresAuth: true,
+                breadcrumb: [
+                  { name: "Meu Perfil"},
+                ]
+              },
+            },
+            {
+              name: 'Logout',
+              path: '/logout',
+              component: () => import('@/views/perfil/Logout.vue'),
+              meta: {
+                requiresAuth: true,
+              },
+            },
+          ],
+        },
     ]
 });
 

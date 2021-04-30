@@ -25,26 +25,74 @@
             </router-link>
           </v-list-item-content>
         </v-list-item>
+        <v-divider class="mb-1" style="margin-top:10px; padding-left:" />
+    
+        <v-list-item @click="showSubmenuPerfil = !showSubmenuPerfil">
+          <v-list-item-action>
+            <v-icon size="45">mdi-account-circle</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              <span class="title-item-drawer">{{nomeUsuario}}</span>
+            </v-list-item-title>
+          </v-list-item-content>
+          <span class="arrow-expand-btn">
+            <v-icon v-if="showSubmenuPerfil == true" size="15">mdi-arrow-down-drop-circle-outline</v-icon>
+            <v-icon v-else size="15">mdi-arrow-up-drop-circle-outline</v-icon>
+          </span>
+        </v-list-item>
+
+        <div v-if="showSubmenuPerfil == true">
+          <v-list-item @click="navegateTo('Perfil')">
+            <v-list-item-action>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                <span class="title-item-drawer">Perfil</span>
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="navegateTo('Logout')">
+            <v-list-item-action>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                <span class="title-item-drawer">Logout</span>
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
+
+        <!-- <v-list-item-avatar
+          class="align-self-center"
+          color="white"
+        >
+          <v-img
+            src="@/assets/usuario_default.png"
+          />
+        </v-list-item-avatar> -->
 
         <v-divider class="mb-1" style="margin-top:10px" />
 
         <v-list-item @click="navegateTo('Home')">
           <v-list-item-action>
-            <v-icon>mdi-widgets</v-icon>
+            <v-icon>mdi-widgets-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              Home
+              <span class="title-item-drawer">Home</span>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item @click="navegateTo('Contabilidade')">
           <v-list-item-action>
-            <v-icon>mdi-account-cash-outline</v-icon>
+            <v-icon>mdi-trending-up</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              Contabilidade
+              <span class="title-item-drawer">Contabilidade</span>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -104,7 +152,9 @@ export default {
 
     data () {
       return {
-        expandOnHover: true
+        expandOnHover: true,
+        nomeUsuario: JSON.parse(localStorage.getItem('user')).nome,
+        showSubmenuPerfil: false,
       }
     },
     methods: {
@@ -118,10 +168,25 @@ export default {
 </script>
 
 <style scoped>
-.expand-comp{
+.arrow-expand-btn {
+    width: 20px;
+    height: 20px;
+    bottom:0px; 
+    left: 50%; 
+    transform: translate(-50%, 0);
+
+
+}
+
+.expand-comp {
   height: 86px;
   align-items: center;
   display: flex;
   justify-content: flex-start;
+}
+
+.title-item-drawer {
+  font-size: 12px;
+  letter-spacing: 0.07em;
 }
 </style>

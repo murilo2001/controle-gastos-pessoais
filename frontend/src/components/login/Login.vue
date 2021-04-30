@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-content>
+    <v-content style="background-color:#222222">
       <v-container
         fluid
         fill-height
@@ -67,7 +67,7 @@
                     label="Senha"
                     name="senha"
                     prepend-icon="mdi-lock"
-                    type="senha"
+                    type="password"
                     v-model="senha"
                   ></v-text-field>
                 </v-form>
@@ -105,6 +105,7 @@ export default {
                     nome: response.data.usuario.nome,
                     email: response.data.usuario.email
                 };
+                localStorage.setItem('token_backend', JSON.stringify(response.data.token));
                 localStorage.setItem('user', JSON.stringify(user));
                 this.$router.push('/');
             }).catch(error => {

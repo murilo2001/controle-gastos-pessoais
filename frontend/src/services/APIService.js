@@ -1,12 +1,11 @@
 import axios from 'axios';
-import tokens from '@/config/BackendTokens';
 import router from '@/router/index.js'
 
 export default {
 
     apiCall() {
         const baseURL = 'http://localhost:3333';
-        const token = tokens.access_token; 
+        let token = JSON.parse(localStorage.getItem('token_backend'));
         
         let call = axios.create({
             baseURL,

@@ -98,6 +98,7 @@
                 min-width="120"
                 style="float: right; margin-right:15px;"
                 class="mt-n5"
+                @click="editUser()"
               >
                 Salvar
               </v-btn>
@@ -109,18 +110,66 @@
 </template>
 
 <script>
+//import UsuariosService from '../../services/UsuariosService';
+import UsuariosService from '@/services/UsuariosService';
 export default {
-    name: 'Edit',
+  name: 'Edit',
 
-    data() {
-        return {
-            image: null,
-            nome: '',
-            sobrenome: '',
-            senha: '',
-            senha2: '',
-        }
+  data() {
+    return {
+      image: null,
+      nome: '',
+      sobrenome: '',
+      email: '',
+      senha: '',
+      senha2: '',
     }
+  },
+
+  mounted() {
+    this.getUsuarioLogado();
+  },
+
+  methods: {
+
+    editUser() {
+      
+      if (this.senha != this.senha2) {
+        this.$toast.error('As senhas inseridas não são iguais.', '',{position:'topRight'});
+        return
+      }
+
+      if (!this.nome.trim()) {
+        this.$toast.error('O campo primeiro nome é obrigatorio.', '',{position:'topRight'})
+        return
+      } else if (!this.sobrenome.trim()) {
+        this.$toast.error('O campo sobrenome é obrigatorio.', '',{position:'topRight'})
+        return
+      }
+
+      UsuariosService.putUpdateUser(this.usuario.id, this.nome, this.sobrenome, this.senha).then(() => {
+        this.$toast.success('Informações de perfil atualizadas com sucesso.', '',{position:'topRight'});
+        let userdited = this.usuario;
+        userdited.nome = this.nome;
+        userdited.sobrenome = this.sobrenome;
+        localStorage.setItem('user', JSON.stringify(userdited));
+      }).catch(error => {
+        console.error('error: ', error);
+      });
+    },
+
+    getUsuarioLogado() {
+      this.nome = this.usuario.nome;
+      this.sobrenome = this.usuario.sobrenome;
+      this.email = this.usuario.email;
+    }
+  },
+
+  computed: {
+    usuario () {
+      return JSON.parse(localStorage.getItem('user'));
+    }
+  }
 }
 </script>
 

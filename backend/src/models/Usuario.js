@@ -5,9 +5,9 @@ class Usuario extends Model {
     static init(sequelize) {
         super.init({
             nome: Sequelize.STRING,
+            sobrenome: Sequelize.STRING,
             email: Sequelize.STRING,
             senha: Sequelize.STRING,
-            is_logged: Sequelize.BOOLEAN
         }, { 
             sequelize,
             hooks: {

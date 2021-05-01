@@ -103,6 +103,7 @@ export default {
                 let user = {
                     id: response.data.usuario.id,
                     nome: response.data.usuario.nome,
+                    sobrenome: response.data.usuario.sobrenome,
                     email: response.data.usuario.email
                 };
                 localStorage.setItem('token_backend', JSON.stringify(response.data.token));

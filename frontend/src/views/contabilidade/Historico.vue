@@ -11,6 +11,7 @@
             label="Mês / Ano"
             v-model="dateSelected"
             @change="rechargeTable()"
+            no-data-text="Nenhuma contabilidade cadastrada"
           >
           <template v-slot:item="{ item, attrs, on }">
             <v-list-item

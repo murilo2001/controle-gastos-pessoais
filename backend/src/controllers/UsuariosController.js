@@ -15,7 +15,7 @@ module.exports = {
 
     async login(req, res) {
         try {
-            const { senha, email, is_logged } = req.body;
+            const { senha, email } = req.body;
 
             const usuario = await Usuario.findOne({ where: { email } });
 
@@ -36,16 +36,7 @@ module.exports = {
 
             const usuario_id = usuario.id;
 
-            /* atualiza coluna is_logged para true para identificar usuario logado */
-            await Usuario.update({
-                is_logged
-            }, {
-                where: {
-                    id: usuario_id
-                }
-            });
-
-            /* ao colocar senha undefined ira ocultar a senha no response (200) */
+            /* ao colocar senha undefined ira ocultar a senha ao restornar response (200) */
             usuario.senha = undefined;
 
             const token = gerarToken({ id: usuario.id });
@@ -77,9 +68,9 @@ module.exports = {
 
     async store(req, res) {
         try {
-            const { nome, email, senha } = req.body;
+            const { nome, sobrenome, email, senha } = req.body;
 
-            const usuario = await Usuario.create({ nome, email, senha});
+            const usuario = await Usuario.create({ nome, sobrenome, email, senha});
 
             const token = gerarToken({ id: usuario.id });
             
@@ -95,16 +86,30 @@ module.exports = {
 
     async update(req, res) {
         try {
-            const { nome, email, senha } = req.body;
+            const { nome, sobrenome, senha } = req.body;
             const { usuario_id } = req.params;
-
-            await Usuario.update({
-                nome, email, senha
-            },{
-                where: {
-                    id: usuario_id
-                }
-            });
+            
+            /* criptografa a senha */
+            const salt = bcrypt.genSaltSync();
+            let senhaCrypt = bcrypt.hashSync(senha, salt);
+            
+            if (senha) {
+                await Usuario.update({
+                    nome: nome, sobrenome: sobrenome, senha: senhaCrypt
+                },{
+                    where: {
+                        id: usuario_id
+                    }
+                });
+            } else {
+                await Usuario.update({
+                    nome: nome, sobrenome: sobrenome
+                },{
+                    where: {
+                        id: usuario_id
+                    }
+                });
+            }
 
             return res.status(200).send({
                 status: 1,

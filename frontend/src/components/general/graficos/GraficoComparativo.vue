@@ -1,26 +1,19 @@
 <script>
 
 import { Bar } from 'vue-chartjs';
+import GraficosService from '@/services/GraficosService';
+import convertHelper from '@/convertHelper';
 
 export default {
     extends: Bar,
 
-    props: {
-        items: {
-            type: Array,
-            required: true
-        }
-    },
-
     async mounted() {
-        await this.fillArr();
+        await this.fillChartData(this.usuario.id);
         this.renderChart(this.chartdata, this.options);
     },
     data() {
         return {
-            labelsExtract: [],
-            dataReceitasExtract: [],
-            dataDespesasExtract: [],
+            items: [],
             chartdata: {
                 labels: [],
                 datasets: [
@@ -46,21 +39,32 @@ export default {
     },
 
     methods: {
-        async fillArr() {
-            this.items.forEach((item) => {
-                let label = item.mes+"/"+item.ano;
-                let checkExistenceArray = this.chartdata.labels.indexOf(label);
-                if (checkExistenceArray == -1) { 
-                    this.chartdata.labels.push(label);
-                }
+        fillChartData (usuario_id) {
+            return GraficosService.getContabilidadeUserMonthsComparative(usuario_id).then(response => {
+                response.data.forEach(info => {
+                    let label = convertHelper.getNomeMesPorExtenso(info.mes)+"/"+info.ano;
+                    let checkExistenceArray = this.chartdata.labels.indexOf(label);
+                    if (checkExistenceArray == -1) { 
+                        this.chartdata.labels.push(label);
+                    }
 
-                if (item.tipo == "receita") {
-                    this.chartdata.datasets[0].data.push(item.total);
-                } else {
-                    this.chartdata.datasets[1].data.push(item.total);
-                }
+                    if (info.tipo == "receita") {
+                        this.chartdata.datasets[0].data.push(parseInt(info.total));
+                    } else {
+                        this.chartdata.datasets[1].data.push(parseInt(info.total));
+                    }
+
+                });
+            }).catch(error => {
+                console.error('error: ', error);
             });
-        }
+        },
+    },
+
+  computed: {
+    usuario () {
+      return JSON.parse(localStorage.getItem('user'));
     }
+  }
 }
 </script>

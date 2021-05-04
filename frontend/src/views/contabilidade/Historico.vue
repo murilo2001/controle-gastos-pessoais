@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import ContabilidadesService from '../../services/ContabilidadesService';
+  import ContabilidadesService from '@/services/ContabilidadesService';
   export default {
     name: 'Historico',
     components: {
@@ -104,6 +104,5 @@
         return JSON.parse(localStorage.getItem('user'));
       }
     }
-
   }
 </script>

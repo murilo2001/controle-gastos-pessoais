@@ -1,24 +1,20 @@
 <script>
 
 import { Pie } from 'vue-chartjs';
+import GraficosService from '@/services/GraficosService';
 
 export default {
     extends: Pie,
 
-    props: {
-        items: {
-            type: Array,
-            required: true
-        }
-    },
-
     async mounted() {
-        await this.fillArr();
+        let info = await this.getDateLastRecordRegistered(this.usuario.id);
+        await this.fillChartData(this.usuario.id, info.ano, info.mes);
         this.renderChart(this.chartdata, this.options)
     },
 
     data() {
         return {
+            items: [],
             chartdata: {
                 labels: [],
                 datasets: [
@@ -67,16 +63,31 @@ export default {
     },
 
     methods: {
-        async fillArr() {
-            this.items.forEach((item) => {
-                this.chartdata.labels.push(item.nome+" R$");
-                this.chartdata.datasets[0].data.push(item.valor);
+        fillChartData (usuario_id, ano, mes) {
+            return GraficosService.getContabilidadeUserSummaryLastMonth(usuario_id, ano, mes).then(response => {
+                response.data.forEach((item) => {
+                    this.chartdata.labels.push(item.nome+" R$");
+                    this.chartdata.datasets[0].data.push(item.valor);
+                });
+
+            }).catch(error => {
+                console.error('error: ', error);
             });
+        },
+
+        getDateLastRecordRegistered (usuario_id) {
+          return GraficosService.getLastMonthYear(usuario_id).then(response => {
+            return {ano: response.data[0].ano, mes: response.data[0].mes };
+          }).catch(error => {
+            console.error('error: ', error);
+          });
+        },
+    },
+
+    computed: {
+        usuario () {
+            return JSON.parse(localStorage.getItem('user'));
         }
     }
 }
 </script>
-
-<style>
-
-</style>

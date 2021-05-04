@@ -174,7 +174,8 @@
 </template>
 
 <script>
-  import ContabilidadesService from '../../services/ContabilidadesService';
+  import ContabilidadesService from '@/services/ContabilidadesService';
+  
   export default {
     props: {
       items: {
@@ -182,6 +183,7 @@
         required: true
       }
     },
+
     data: () => ({
       menuDataPicker: false,
       dialog: false,

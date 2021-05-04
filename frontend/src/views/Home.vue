@@ -16,7 +16,7 @@
               <v-list-item-title class="headline mb-1">
                 Resumo
               </v-list-item-title>
-              <v-list-item-subtitle>abr/2021</v-list-item-subtitle>
+              <v-list-item-subtitle>{{lastMonthYear}}</v-list-item-subtitle>
             </v-list-item-content>
             <span class="btn-card-border" style="background-color: #6c5ce7;">
               <v-btn
@@ -81,7 +81,7 @@
           align="center"
           justify="center"
         >
-          <grafico-resumo-mes class="graph-size" :items="arrItemsGraficoResumo" />
+          <grafico-resumo-mes class="graph-size" />
         </v-card>
       </v-col>
       <v-col>
@@ -92,7 +92,7 @@
           align="center"
           justify="center"
         >
-            <grafico-comparativo class="graph-size" :items="arrItemsGraficoComparativo" />
+            <grafico-comparativo class="graph-size" />
         </v-card>
       </v-col>
     </v-row>
@@ -114,7 +114,9 @@
 </template>
 
 <script>
-import GraficosService from '../services/GraficosService';
+import GraficosService from '@/services/GraficosService';
+import convertHelper from '@/convertHelper';
+
 export default {
   name: 'Home',
   components: {
@@ -124,90 +126,30 @@ export default {
   
   data () {
     return {
-      arrItemsGraficoComparativo: [],
-      arrItemsGraficoResumo: [],
-      monthLastRecordRegistered: undefined,
-      yearLastRecordRegistered: undefined
+      lastMonthYear: ""
     }
   },
 
-  async mounted () {
-    await this.fillArrItemsGraficoComparativo(this.usuario.id);
-    await this.fillDataLastRecordRegistered(this.usuario.id);
-    await this.fillArrItemsGraficoResumo(this.usuario.id, this.yearLastRecordRegistered, this.monthLastRecordRegistered);
+  mounted () {
+    this.getDateLastRecordRegistered(this.usuario.id);
   },
 
   methods: {
-    async fillArrItemsGraficoComparativo (usuario_id) {
-      GraficosService.getContabilidadeUserMonthsComparative(usuario_id).then(response => {
-        response.data.forEach(info => {
-          this.arrItemsGraficoComparativo.push({
-            mes: this.getNomeMesPorExtenso(info.mes),
-            ano: info.ano,
-            total: parseInt(info.total),
-            tipo: info.tipo
-          });
-        });
+
+    getDateLastRecordRegistered (usuario_id) {
+      GraficosService.getLastMonthYear(usuario_id).then(response => {
+        this.lastMonthYear = convertHelper.getNomeMesPorExtenso(response.data[0].mes)+'/'+response.data[0].ano;
       }).catch(error => {
         console.error('error: ', error);
       });
     },
-
-    getNomeMesPorExtenso (mes) {
-      mes = parseInt(mes);
-      switch (mes) {
-        case 1:
-          return 'Janeiro';
-        case 2:
-          return 'Fevereiro';
-        case 3:
-          return 'Março';
-        case 4:
-          return 'Abril';
-        case 5:
-          return 'Maio';
-        case 6:
-          return 'Junho';
-        case 7:
-          return 'Julho';
-        case 8:
-          return 'Agosto';
-        case 9:
-          return 'Setembro'
-        case 10:
-          return 'Outubro';
-        case 11:
-          return 'Novembro';
-        case 12:
-          return 'Dezembro';
-      }
-    },
-
-    async fillDataLastRecordRegistered (usuario_id) {
-      await GraficosService.getLastMonthYear(usuario_id).then(response => {
-        this.yearLastRecordRegistered = response.data[0].ano;
-        this.monthLastRecordRegistered = response.data[0].mes;
-      }).catch(error => {
-        console.error('error: ', error);
-      });
-    },
-
-    async fillArrItemsGraficoResumo (usuario_id, ano, mes) {
-      GraficosService.getContabilidadeUserSummaryLastMonth(usuario_id, ano, mes).then(response => {
-      this.arrItemsGraficoResumo = response.data;
-      }).catch(error => {
-        console.error('error: ', error);
-      });
-    },
-
   },
 
   computed: {
     usuario () {
       return JSON.parse(localStorage.getItem('user'));
-    }
+    },
   }
-
 }
 </script>
 

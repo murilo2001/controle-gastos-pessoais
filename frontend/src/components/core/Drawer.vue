@@ -19,8 +19,8 @@
             <router-link to='/'>
               <v-img
                 width="150"
-                height="50"
-                src="@/assets/example_logo.png"
+                height="47"
+                src="@/assets/logo.png"
               />
             </router-link>
           </v-list-item-content>
@@ -33,7 +33,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              <span class="title-item-drawer">{{nomeUsuario}}</span>
+              <span class="title-item-drawer">{{user.nome+' '+user.sobrenome}}</span>
             </v-list-item-title>
           </v-list-item-content>
           <span class="arrow-expand-btn">
@@ -112,7 +112,7 @@
               href="https://www.linkedin.com/in/murilo-jose/" target="_blank"
             >
               <v-icon
-                size="25"
+                size="45"
                 color="white"
               >
                 mdi-linkedin
@@ -153,16 +153,21 @@ export default {
     data () {
       return {
         expandOnHover: true,
-        nomeUsuario: JSON.parse(localStorage.getItem('user')).nome,
         showSubmenuPerfil: false,
       }
     },
+
     methods: {
       navegateTo(where) {
         this.$router.push({name: where});
       }
-    }
+    },
 
+    computed: {
+      user () {
+        return JSON.parse(localStorage.getItem('user'));
+      }
+    }
 }
 
 </script>

@@ -124,7 +124,11 @@
 
     <v-content>
       <div class="expand-comp">
-        <v-app-bar-nav-icon style="margin-left:10px; background-color:#efefef; border:solid; border-color:#e2e2e2; border-radius:50%; width:40px; height:40px;" @click.native="expandOnHover = !expandOnHover"></v-app-bar-nav-icon><span style="font-size: 1.25rem; margin-left:5px;">Dashboard</span>
+        <v-app-bar-nav-icon 
+          style="margin-left:10px; background-color:#efefef; border:solid; border-color:#e2e2e2; border-radius:50%; width:40px; height:40px;" 
+          @click.native="expandOnHover = !expandOnHover">
+        </v-app-bar-nav-icon>
+        <span style="font-size: 1.25rem; margin-left:5px;">{{breadcrumb}}</span>
       </div>
       <v-container
         fluid
@@ -166,6 +170,14 @@ export default {
     computed: {
       user () {
         return JSON.parse(localStorage.getItem('user'));
+      },
+      breadcrumb() {
+        let bc = this.$route.meta.breadcrumb;
+        if (bc) {
+          return bc[0].name;
+        } else {
+          return "";
+        }
       }
     }
 }

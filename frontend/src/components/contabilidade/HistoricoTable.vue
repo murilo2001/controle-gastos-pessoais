@@ -243,6 +243,7 @@
           ContabilidadesService.deleteContabilidade(this.editedItem.id)
           .then(response => {
             console.log(response.data);
+            location.reload();
             this.$toast.success('Item da contablidade excluido com sucesso.', '',{position:'topRight'});
           }).catch(error => {
             console.error('error: ', error);

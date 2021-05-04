@@ -43,6 +43,8 @@
 
 <script>
   import ContabilidadesService from '@/services/ContabilidadesService';
+  import PusherService from '@/services/PusherService';
+
   export default {
     name: 'Historico',
     components: {
@@ -51,6 +53,7 @@
 
     mounted () {
       this.fillArrDates(this.usuario.id);
+      this.subscribe();
     },
     
     data () {
@@ -65,18 +68,30 @@
       fillArrDates (usuario_id) {
         ContabilidadesService.getListDateContabilidades(usuario_id).then(response => {
           response.data.forEach(mesAno => {
-            this.arrDatesMesAno.push(mesAno.Mes+'/'+mesAno.Ano);
+            this.arrDatesMesAno.push(mesAno.mes+'/'+mesAno.ano);
           });
+          if (this.arrDatesMesAno.length > 0) {
+            this.dateSelected = this.arrDatesMesAno[0];
+            this.rechargeTable();
+          }
         }).catch(error => {
           console.error('error: ', error);
         });
       },
       
-      rechargeTable () {
-        let dateSelected = this.dateSelected.split("/");
-        if (this.dateSelected != null) {
-          let mes = dateSelected[0];
-          let ano = dateSelected[1];
+      rechargeTable (selectedOption = '') {
+        let mes;
+        let ano;
+        if(selectedOption != '') {
+          let dateSelected2 = selectedOption.split("-");
+          mes = dateSelected2[1];
+          ano = dateSelected2[0];
+          this.dateSelected = "";
+         } else {
+          let dateSelected2 = this.dateSelected.split("/");
+          mes = dateSelected2[0];
+          ano = dateSelected2[1];
+         }
           this.itemsTable = [];
           ContabilidadesService.getContabilidadePerMonthYear(this.usuario.id, mes, ano).then(response => {
             response.data.forEach((item) => {
@@ -95,7 +110,13 @@
           }).catch(error => {
             console.error('error: ', error);
           });
-        }
+      },
+
+      subscribe () {
+        let pusherChannel = PusherService.subscribe();
+        pusherChannel.bind('refreshContabilidades', data => {
+          this.rechargeTable(data.message);
+        });
       }
     },
 

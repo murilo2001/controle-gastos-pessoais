@@ -1,6 +1,7 @@
 const Usuario = require ('../models/Usuario');
 const Contabilidade = require ('../models/Contabilidade');
 const KnexDataBase = require ('../config/knex-database');
+const PusherController = require('./PusherController');
 
 module.exports = {
 
@@ -40,6 +41,8 @@ module.exports = {
                 nome, tipo, data, valor, usuario_id
             });
 
+            PusherController.pusherPush('refreshContabilidades', data);
+            
             return res.status(200).json({
                 status: 1,
                 message: 'Contabilidade cadastrada com sucesso!',
@@ -59,6 +62,8 @@ module.exports = {
 
             if (contabilidade) {
                 await Contabilidade.update({ nome, tipo, data, valor }, { where : { id: id } })
+
+                PusherController.pusherPush('refreshContabilidades');
 
                 return res.status(200).json({
                     status: 1,
@@ -83,7 +88,9 @@ module.exports = {
 
            if (contabilidade) {
                await Contabilidade.destroy({ where: { id } });
-
+                
+               PusherController.pusherPush('refreshContabilidades');
+               
                return res.status(200).json({
                 status: 1,
                 message: "Contablidade excluida com sucesso!"
@@ -103,8 +110,10 @@ module.exports = {
         try {
             const id = req.params.usuario_id;
 
-            KnexDataBase.select(KnexDataBase.raw(["YEAR(data) as Ano", "MONTH(data) as Mes"]))
+            KnexDataBase.select(KnexDataBase.raw(["YEAR(data) as ano", "MONTH(data) as mes"]))
             .where({usuario_id: id})
+            .orderBy('ano', 'desc')
+            .orderBy('mes', 'desc')
             .table("contabilidades").then(data => {
                 return res.status(200).send(data);
             }).catch(err => {
@@ -149,10 +158,10 @@ module.exports = {
             .where({usuario_id: id})
             .limit(12)
             .table("contabilidades")
-            .orderBy('Ano', 'asc')
-            .orderBy('Mes', 'asc')
-            .groupBy('Mes')
-            .groupBy('Ano')
+            .orderBy('ano', 'asc')
+            .orderBy('mes', 'asc')
+            .groupBy('mes')
+            .groupBy('ano')
             .groupBy('tipo').then(data => {
 
                 if (data == "" || data == null) {
@@ -179,8 +188,8 @@ module.exports = {
             .where({usuario_id: id})
             .limit(1)
             .table("contabilidades")
-            .orderBy('Ano', 'desc')
-            .orderBy('Mes', 'desc')
+            .orderBy('ano', 'desc')
+            .orderBy('mes', 'desc')
             .then(data => {
 
                 if (data == "" || data == null) {

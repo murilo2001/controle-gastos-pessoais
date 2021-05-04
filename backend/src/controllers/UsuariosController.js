@@ -1,15 +1,6 @@
 const Usuario = require ('../models/Usuario');
 const bcrypt = require ('bcryptjs');
-const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth.json');
-
-/* função para gerar token que recebe como params o id do usuario */
-function gerarToken(params = {}) {
-    /* Irá ser gerado um token com base no id do usuario e no secret */
-    return jwt.sign(params, authConfig.secret, {
-        expiresIn: 86400, /* 86400 segundos = 24h */
-    });
-}
+const tokenController = require('./TokenController');
 
 module.exports = {
 
@@ -39,7 +30,7 @@ module.exports = {
             /* ao colocar senha undefined ira ocultar a senha ao restornar response (200) */
             usuario.senha = undefined;
 
-            const token = gerarToken({ id: usuario.id });
+            const token = tokenController.gerarToken({ id: usuario.id });
 
             return res.status(200).send({
                 status: 1,
@@ -72,7 +63,7 @@ module.exports = {
 
             const usuario = await Usuario.create({ nome, sobrenome, email, senha});
 
-            const token = gerarToken({ id: usuario.id });
+            const token = tokenController.gerarToken({ id: usuario.id });
             
             return res.status(200).send({
                 status: 1,

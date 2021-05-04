@@ -1,84 +1,51 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <v-content style="background-color:#222222">
-      <v-container
-        fluid
-        fill-height
-      >
-        <v-layout
-          align-center
-          justify-center
-        >
-          <v-flex
-            xs12
-            sm8
-            md4
-          >
-            <v-card class="elevation-12">
-              <v-toolbar
-                color="primary"
-                dark
-                flat
-              >
-                <v-toolbar-title>Login</v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      href="#"
-                      icon
-                      large
-                      target="_blank"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-cached</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Esqueci a senha</span>
-                </v-tooltip>
-                <v-tooltip right>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      icon
-                      large
-                      href="#"
-                      target="_blank"
-                      v-on="on"
-                      class="mx-2"
-                    >
-                      <v-icon>mdi-plus</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Registrar</span>
-                </v-tooltip>
-              </v-toolbar>
+      <v-container fluid fill-height style="width:50%">
+        <v-card class="mt-4 mx-auto text-center hidden-sm-only" width="320">
+          <v-card-text>
+            <v-card class="v-card--offset mx-auto" color="secondary" elevation="4" dark>
               <v-card-text>
-                <v-form>
-                  <v-text-field
-                    label="Email"
-                    name="email"
-                    prepend-icon="mdi-account"
-                    type="text"
-                    v-model="email"
-                  ></v-text-field>
-
-                  <v-text-field
-                    id="senha"
-                    label="Senha"
-                    name="senha"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    v-model="senha"
-                  ></v-text-field>
-                </v-form>
+                <v-img src="@/assets/logo.png" width="170" height="47" style="margin: 0 auto" />
               </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn @click="autenticar" color="primary">Logar</v-btn>
-              </v-card-actions>
             </v-card>
-          </v-flex>
-        </v-layout>
+          </v-card-text>
+          <v-card-text>
+            <v-text-field label="Email" type="text" v-model="email" />
+            <v-text-field
+              label="Senha" 
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
+              :type="showPassword ? 'text' : 'password'"
+              v-model="senha"
+              @click:append="showPassword = !showPassword"
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-row align="center" no-gutters>
+              <v-col class="text-center">
+                <div class="my-2">
+                  <v-btn color="secondary" block @click="autenticar()">Logar</v-btn>
+                </div>
+                <div>
+                  <v-btn color="black" x-small text @click="acionarNotifcEsqueciSenha()">
+                    <v-icon>mdi-cached</v-icon>
+                      Esqueci a senha
+                  </v-btn>
+                </div>
+                <div>
+                  <v-btn 
+                    color="black" 
+                    x-small text
+                    @click="$emit('changeView', 'register')"
+                  >
+                    <v-icon>mdi-plus</v-icon>
+                    Registrar-se
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-actions>
+        </v-card>
       </v-container>
     </v-content>
 </v-app>
@@ -88,31 +55,36 @@
 import UsuariosService from '@/services/UsuariosService';
 
 export default {
-    name: 'Login',
-    
-    data() {
-        return {
-            email: "",
-            senha: ""
-        }
+  name: 'Login',
+  
+  data() {
+      return {
+          email: "",
+          senha: "",
+          showPassword: false,
+      }
+  },
+  methods: {
+    autenticar() {
+      localStorage.clear();
+      UsuariosService.postLogar(this.email,this.senha).then(response => {
+        let user = {
+          id: response.data.usuario.id,
+          nome: response.data.usuario.nome,
+          sobrenome: response.data.usuario.sobrenome,
+          email: response.data.usuario.email
+        };
+        localStorage.setItem('token_backend', JSON.stringify(response.data.token));
+        localStorage.setItem('user', JSON.stringify(user));
+        this.$router.push('/');
+      }).catch(error => {
+      console.error('error: ', error);
+      });
     },
-    methods: {
-        autenticar() {
-            localStorage.clear();
-            UsuariosService.postLogar(this.email,this.senha).then(response => {
-                let user = {
-                    id: response.data.usuario.id,
-                    nome: response.data.usuario.nome,
-                    sobrenome: response.data.usuario.sobrenome,
-                    email: response.data.usuario.email
-                };
-                localStorage.setItem('token_backend', JSON.stringify(response.data.token));
-                localStorage.setItem('user', JSON.stringify(user));
-                this.$router.push('/');
-            }).catch(error => {
-            console.error('error: ', error);
-            });
-        }
+
+    acionarNotifcEsqueciSenha() {
+      this.$toast.info('A opção para recuperação de senha ainda não foi criada.', '',{position:'topRight'})
     }
+  },
 }
 </script>

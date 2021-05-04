@@ -110,8 +110,8 @@
 </template>
 
 <script>
-//import UsuariosService from '../../services/UsuariosService';
 import UsuariosService from '@/services/UsuariosService';
+
 export default {
   name: 'Edit',
 

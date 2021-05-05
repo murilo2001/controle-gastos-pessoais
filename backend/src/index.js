@@ -9,7 +9,8 @@ const app = express();
 app.use(cors());
 const corsOptions = {
     //origin: 'http://localhost:8080',
-    origin: 'http://upperfi.com.s3-website-sa-east-1.amazonaws.com',
+    //origin: 'http://upperfi.com.s3-website-sa-east-1.amazonaws.com',
+    origin: '*',
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions));

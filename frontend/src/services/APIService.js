@@ -5,8 +5,7 @@ export default {
 
     apiCall() {
         //const baseURL = 'http://localhost:3333';
-        //const baseURL = 'http://ec2-18-230-118-113.sa-east-1.compute.amazonaws.com:3333';
-        const baseURL = 'http://d1oqty0urn1887.cloudfront.net:3333';
+        const baseURL = 'http://ec2-18-230-118-113.sa-east-1.compute.amazonaws.com:3333';
         let token = JSON.parse(localStorage.getItem('token_backend'));
         
         let call = axios.create({

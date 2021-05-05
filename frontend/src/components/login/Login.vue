@@ -24,7 +24,7 @@
             <v-row align="center" no-gutters>
               <v-col class="text-center">
                 <div class="my-2">
-                  <v-btn color="secondary" block @click="autenticar()">Logar</v-btn>
+                  <v-btn color="secondary" block :disabled="disabledBtnLogarValue" @click="autenticar()">Logar</v-btn>
                 </div>
                 <div>
                   <v-btn color="black" x-small text @click="acionarNotifcEsqueciSenha()">
@@ -78,7 +78,8 @@ export default {
         localStorage.setItem('user', JSON.stringify(user));
         this.$router.push('/');
       }).catch(error => {
-      console.error('error: ', error);
+        console.error('error: ', error);
+        this.$toast.info(error.data.message, '',{position:'topRight'})
       });
     },
 
@@ -86,5 +87,15 @@ export default {
       this.$toast.info('A opção para recuperação de senha ainda não foi criada.', '',{position:'topRight'})
     }
   },
+
+  computed: {
+    disabledBtnLogarValue() {
+      if (this.email != "" && this.senha != "") {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 }
 </script>

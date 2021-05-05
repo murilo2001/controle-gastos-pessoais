@@ -8,8 +8,10 @@ export default {
 
     async mounted() {
         let info = await this.getDateLastRecordRegistered(this.usuario.id);
-        await this.fillChartData(this.usuario.id, info.ano, info.mes);
-        this.renderChart(this.chartdata, this.options)
+        if (info != undefined) {
+            await this.fillChartData(this.usuario.id, info.ano, info.mes);
+            this.renderChart(this.chartdata, this.options);
+        }
     },
 
     data() {
@@ -77,7 +79,11 @@ export default {
 
         getDateLastRecordRegistered (usuario_id) {
           return GraficosService.getLastMonthYear(usuario_id).then(response => {
-            return {ano: response.data[0].ano, mes: response.data[0].mes };
+            if(!response.data.message) {
+                return {ano: response.data[0].ano, mes: response.data[0].mes };
+            } else {
+                return undefined;
+            }
           }).catch(error => {
             console.error('error: ', error);
           });

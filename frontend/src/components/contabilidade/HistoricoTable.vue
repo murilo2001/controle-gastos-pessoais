@@ -243,8 +243,8 @@
           ContabilidadesService.deleteContabilidade(this.editedItem.id)
           .then(response => {
             console.log(response.data);
-            location.reload();
             this.$toast.success('Item da contablidade excluido com sucesso.', '',{position:'topRight'});
+            this.$emit('refreshSelectCont');
           }).catch(error => {
             console.error('error: ', error);
             this.$toast.error('Erro ao excluir item da contablidade.', '',{position:'topRight'});
@@ -272,6 +272,7 @@
         .then(response => {
           console.log(response.data);
           this.$toast.success('Item cadastrada com sucesso na contabilidade.', '',{position:'topRight'});
+          this.$emit('refreshSelectCont');
         }).catch(error => {
           this.$toast.error('Erro ao cadastrar item na contabilidade.', '',{position:'topRight'});
           console.error('error: ', error);
@@ -285,6 +286,7 @@
         .then(response => {
           console.log(response.data);
           this.$toast.success('Contabilidade atualizada com sucesso.', '',{position:'topRight'});
+          this.$emit('refreshSelectCont');
         }).catch(error => {
           this.$toast.error('Erro ao atualizar contabilidade.', '',{position:'topRight'});
           console.error('error: ', error);

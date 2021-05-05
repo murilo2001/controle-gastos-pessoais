@@ -41,20 +41,23 @@ export default {
     methods: {
         fillChartData (usuario_id) {
             return GraficosService.getContabilidadeUserMonthsComparative(usuario_id).then(response => {
-                response.data.forEach(info => {
-                    let label = convertHelper.getNomeMesPorExtenso(info.mes)+"/"+info.ano;
-                    let checkExistenceArray = this.chartdata.labels.indexOf(label);
-                    if (checkExistenceArray == -1) { 
-                        this.chartdata.labels.push(label);
-                    }
-
-                    if (info.tipo == "receita") {
-                        this.chartdata.datasets[0].data.push(parseInt(info.total));
-                    } else {
-                        this.chartdata.datasets[1].data.push(parseInt(info.total));
-                    }
-
-                });
+                if (!response.data.message) {
+                    response.data.forEach(info => {
+                        console.log('info: ',info);
+                        let label = convertHelper.getNomeMesPorExtenso(info.mes)+"/"+info.ano;
+                        let checkExistenceArray = this.chartdata.labels.indexOf(label);
+                        if (checkExistenceArray == -1) { 
+                            this.chartdata.labels.push(label);
+                        }
+    
+                        if (info.tipo == "receita") {
+                            this.chartdata.datasets[0].data.push(parseInt(info.total));
+                        } else {
+                            this.chartdata.datasets[1].data.push(parseInt(info.total));
+                        }
+    
+                    });
+                }
             }).catch(error => {
                 console.error('error: ', error);
             });

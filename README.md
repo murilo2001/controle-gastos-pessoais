@@ -80,6 +80,11 @@ Apos a conclusão desse projeto tive a oportunidade de fazer o deploy dele na AW
   $ npx sequelize-cli db:create (Para criar a base de dados)
   $ npx sequelize-cli db:migrate (Para executar as migrations)
 ````
+```bash 
+  # Para inicar o servidor local da aplicação e deixa-lá online digite
+  $ npm run serve (dentro do diretório upper-fi/frontend)
+  $ npm start (dentro do diretório upper-fi/backend)
+````
 ---
 ## 📄 Licença
 Este projeto está sob a [MIT license](https://opensource.org/licenses/MIT). Veja o arquivo LICENÇA para maiores detalhes.

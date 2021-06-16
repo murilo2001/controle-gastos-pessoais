@@ -42,7 +42,7 @@
           </span>
         </v-list-item>
 
-        <div v-if="showSubmenuPerfil == true">
+        <div v-show="showSubmenuPerfil == true">
           <v-list-item @click="navegateTo('Perfil')">
             <v-list-item-action>
               <v-icon>mdi-account</v-icon>
@@ -150,8 +150,7 @@
 
 
 <script>
-
-export default {
+  export default {
     name: 'Drawer',
 
     data () {
@@ -163,8 +162,10 @@ export default {
 
     methods: {
       navegateTo(where) {
-        this.$router.push({name: where});
-      }
+        if (this.$router.history.current.name != where) {
+          this.$router.push({name: where});
+        }
+      },
     },
 
     computed: {
@@ -186,13 +187,11 @@ export default {
 
 <style scoped>
 .arrow-expand-btn {
-    width: 20px;
-    height: 20px;
-    bottom:0px; 
-    left: 50%; 
-    transform: translate(-50%, 0);
-
-
+  width: 20px;
+  height: 20px;
+  bottom:0px; 
+  left: 50%; 
+  transform: translate(-50%, 0);
 }
 
 .expand-comp {

@@ -100,17 +100,19 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="editedItem.data"
+                          v-model="editedItem.dateFormatted"
                           label="Data"
                           prepend-icon="mdi-calendar"
                           readonly
                           v-bind="attrs"
                           v-on="on"
+                          v-mask="'##/##/####'"
+                          @blur="editedItem.data = parseDate(editedItem.dateFormatted)"
                         />
                       </template>
                       <v-date-picker
                         v-model="editedItem.data"
-                        @input="menuDataPicker = false"
+                        @input="menuDataPicker = false; editedItem.dateFormatted = formatDate(editedItem.data)"
                         locale="pt-br"
                       />
                     </v-menu>
@@ -175,6 +177,7 @@
 
 <script>
   import ContabilidadesService from '@/services/ContabilidadesService';
+  import dayjs from 'dayjs';
   
   export default {
     props: {
@@ -203,6 +206,7 @@
         nome: '',
         tipo: '',
         data: '',
+        dateFormatted: '',
         valor: 0,
       },
     }),
@@ -293,7 +297,18 @@
         });
 
         this.close();
-      }
+      },
+
+      formatDate(dateSql) {
+        return dayjs(dateSql).format('DD/MM/YYYY')
+      },
+
+      parseDate (date) {
+        if (!date) return null
+
+        const [month, day, year] = date.split('/')
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+      },
     },
   }
 </script>

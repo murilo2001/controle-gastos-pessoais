@@ -26,18 +26,25 @@
           </template>
           </v-select>
       </v-col>
-      <v-col>
-        <v-card
-          class="mx-auto"
-          min-width="300"
-          color="white"
+      <v-col class="mt-3"> 
+        <v-btn
+          color="#277249"
+          class="white--text"
+          @click="gerarXlsx()"
+          width="150px"
+          height="35px"
         >
-
-        </v-card>
+          Gerar XLSX
+          <v-icon
+            right
+            dark
+          >
+            mdi-microsoft-excel
+          </v-icon>
+        </v-btn>
       </v-col>
     </v-row>
-
-  <tabela-historico :items="itemsTable" @refreshSelectCont="fillArrDates(usuario.id)" />
+    <tabela-historico :items="itemsTable" @refreshSelectCont="fillArrDates(usuario.id)" />
   </v-container>
 </template>
 
@@ -66,7 +73,7 @@
     },
 
     methods: {
-      fillArrDates (usuario_id) {
+      fillArrDates(usuario_id) {
         return ContabilidadesService.getListDateContabilidades(usuario_id).then(response => {
           response.data.forEach(mesAno => {
             this.arrDatesMesAno.push(mesAno.mes+'/'+mesAno.ano);
@@ -116,12 +123,28 @@
           }
       },
 
-      subscribe () {
+      subscribe() {
         let pusherChannel = PusherService.subscribe();
         pusherChannel.bind('refreshContabilidades', data => {
           this.rechargeTable(data.message);
         });
       },
+
+      gerarXlsx() {
+        let mes = this.dateSelected.split('/')[0];
+        let ano = this.dateSelected.split('/')[1];
+
+        ContabilidadesService.gerarPlanilha(mes, ano, this.usuario.id).then(response => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", 'controle-gastos-pessoais.xlsx');
+          document.body.appendChild(link);
+          link.click();
+        }).catch(error => {
+          console.error('error: ', error);
+        });
+      }
     },
 
     computed: {

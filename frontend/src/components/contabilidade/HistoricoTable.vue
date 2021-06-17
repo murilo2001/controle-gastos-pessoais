@@ -37,14 +37,15 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              color="blue"
-              dark
-              class="mb-2"
+              fab
               v-bind="attrs"
               v-on="on"
-              style="margin-bottom: 0px !important;"
+              width="40px"
+              height="40"
             >
-              Novo Item
+              <v-icon dark style="font-size: 30px">
+                mdi-plus-box
+              </v-icon>
             </v-btn>
           </template>
           <v-card>

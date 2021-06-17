@@ -177,5 +177,4 @@ export default {
   max-width: 575px;
   max-height: 500px;
 }
-
 </style>

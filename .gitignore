@@ -3,6 +3,7 @@ node_modules
 /frontend/dist
 /backend/src/config/database.js
 /backend/src/config/knex-database.js
+/backend/contabilidade-user*
 
 
 # local env files

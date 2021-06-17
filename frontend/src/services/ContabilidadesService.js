@@ -18,4 +18,7 @@ export default {
     const putData = { nome: nome, tipo: tipo, data: data, valor: valor };
     return APIService.apiCall().put('/contabilidade/'+contabilidade_id, JSON.stringify(putData),
   )},
+  gerarPlanilha(mes, ano, usuario_id) {
+    return APIService.apiCall().get('/gerar-planilha/'+mes+'/'+ano+'/'+usuario_id, {responseType: 'blob'})
+  },
 }

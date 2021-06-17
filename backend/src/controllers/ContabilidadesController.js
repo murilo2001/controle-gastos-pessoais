@@ -2,6 +2,9 @@ const Usuario = require ('../models/Usuario');
 const Contabilidade = require ('../models/Contabilidade');
 const KnexDataBase = require ('../config/knex-database');
 const PusherController = require('./PusherController');
+const xlsx = require('excel4node');
+const path = require('path');
+
 
 module.exports = {
 
@@ -232,4 +235,62 @@ module.exports = {
             return res.status(400).json({ error: err});
         }
     },
+
+    async gerarPlanilha(req, res) {
+        try {
+            const mes = req.params.mes;
+            const ano = req.params.ano;
+            const usuario_id = req.params.usuario_id;
+            
+            KnexDataBase.select(KnexDataBase.raw(["nome", "tipo", "CONCAT(MONTH(data),'/', YEAR(data)) as monthYear", "SUM(valor) as valor"]))
+                .whereRaw(`usuario_id = ${usuario_id} AND YEAR(data) = ${ano} AND MONTH(data) = ${mes}`)
+                .groupBy(["nome", "tipo", "monthYear"])
+                .orderBy("tipo")
+                .table("contabilidades")
+                .then(dataquery => {
+
+                    const wb = new xlsx.Workbook();
+                    const ws = wb.addWorksheet(`Contabilidade-${mes}-${ano}`); /* Nome da sheet */
+
+                    const headingColumnsNames = ["Descrição", "Tipo", "Data", "Valor"];
+                
+                    let headingColumnIndex = 1;
+                    headingColumnsNames.forEach(heading => {
+                        ws.cell(1, headingColumnIndex++).string(heading);
+                    });
+                
+                    let total = 0;
+                    let rowIndex = 2;
+                    let ultimoTipo = ''; /* receita ou despesa */
+                    dataquery.forEach(record => {
+                        let columnIndex = 1;
+                        Object.keys(record).forEach(columnName => {
+
+                            if (columnName == 'tipo') { ultimoTipo = record[columnName]}
+
+                            /* Soma total das receitas - despesas */
+                            if (columnName == 'valor' && ultimoTipo == 'receita'){
+                                total += Number(record[columnName]);
+                            } else if (columnName == 'valor' && ultimoTipo == 'despesa'){
+                                total -= Number(record[columnName]);
+                            }
+
+                            ws.cell(rowIndex, columnIndex++).string(record[columnName]) /* Adiciona uma nova celula do tipo string */
+                        });
+                        rowIndex++;
+                    });
+
+                    ws.cell(rowIndex, 3).string('Total:').style({font: {bold: true}, alignment: {horizontal: 'right'}});
+                    ws.cell(rowIndex, 4).number(total).style({font: {bold: true}, alignment: {horizontal: 'left'}});
+                
+                    const nomeArquivo = `contabilidade-user${usuario_id}-(${mes}-${ano}).xlsx`;
+                    
+                    wb.write(nomeArquivo,function(err, success) {
+                        return err ? res.status(400).json({ error: err}) : res.sendFile(path.resolve(nomeArquivo));
+                    });
+                });
+        } catch (err) {
+            return res.status(400).json({ error: err});
+        }
+    }
 }

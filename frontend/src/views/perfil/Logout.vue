@@ -10,7 +10,7 @@ export default {
     mounted () {
         localStorage.clear();
         this.$router.push('/login');
-        /* Fazer metodo para encaminhar token para black list */
+        /* Implementar feature para encaminhar token para black list */
     },
 }
 </script>

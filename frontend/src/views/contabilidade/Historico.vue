@@ -33,6 +33,7 @@
           @click="gerarPlanilha()"
           width="150px"
           height="35px"
+          v-if="dateSelected != null && dateSelected != ''"
         >
           Gerar XLSX
           <v-icon
@@ -74,10 +75,12 @@
 
     methods: {
       fillArrDates(usuario_id) {
+        /* Resgata todas as datas distintas de contabilidades cadastradas pelo usuário => ordem decrescente */
         return ContabilidadesService.getListDateContabilidades(usuario_id).then(response => {
           response.data.forEach(mesAno => {
             this.arrDatesMesAno.push(mesAno.mes+'/'+mesAno.ano);
           });
+          /* Caso não tiver nenhuma data selecionada no select box ira setar a mais recente como primeira */
           if (this.arrDatesMesAno.length > 0) {
             this.dateSelected = this.arrDatesMesAno[0];
           }
@@ -87,22 +90,13 @@
       },
       
       rechargeTable(selectedOption = '') {
-        let mes;
-        let ano;
-        if(selectedOption != '') {
-          let dateSelected2 = selectedOption.split("-");
-          mes = dateSelected2[1];
-          ano = dateSelected2[0];
-          this.dateSelected = "";
-         } else if (this.dateSelected != null) {
-          let dateSelected2 = this.dateSelected.split("/");
-          mes = dateSelected2[0];
-          ano = dateSelected2[1];
-         }
+         let objMesAno = this.treatParameterRechargeTable(selectedOption);
+
           this.itemsTable = [];
-          if ((mes) && (ano)) {
-            ContabilidadesService.getContabilidadePerMonthYear(this.usuario.id, mes, ano).then(response => {
-              if(!response.data.message) {
+          if (objMesAno.mes && objMesAno.ano) {
+            ContabilidadesService.getContabilidadePerMonthYear(this.usuario.id, objMesAno.mes, objMesAno.ano).then(response => {
+              /* Caso encontrar algum registro correspondente ira atualizar a tabela */
+              if(!response.data.message) { /* message = 'Nenhuma contabilidade encontrada' */
                 response.data.forEach((item) => {
                   let dataConverted = new Date(item.data);
                   dataConverted = dataConverted.toLocaleString();
@@ -116,6 +110,8 @@
                     valor: parseInt(item.valor)
                   });
                 });
+              } else { /* Caso não encontrar nenhuma registro para esse mes / ano significa que não há mais contabilidade para esse data, então sera atualizado a tela */
+                location.reload();
               }
             }).catch(error => {
               console.error('error: ', error);
@@ -123,9 +119,26 @@
           }
       },
 
+      treatParameterRechargeTable(parameter) {
+        if(parameter != '') { /* IF para caso for entregue parametro valido */
+          let aux = parameter.split("-");
+          this.dateSelected = ""; /* Seta selectbox Mes/ano = vazia */
+          return {mes: aux[1], ano: aux[0]}
+        }
+        /* If para caso não encontrar parametro, significa que o rechargeTable() foi chamado sem param. A call foi no mounted ou @change do v-select */
+        if (this.dateSelected != null) {
+          let aux = this.dateSelected.split("/");
+          return {mes: aux[0], ano: aux[1]};
+        }
+
+        /* Caso usuario não passou nenhuma data para atualizar a tabela e não existe nenhuma data selecionada dateSelected == null, significa que não existe nenhum registro cadastrado no BD */
+        return {mes: undefined, ano: undefined};
+      },
+
       subscribe() {
         let pusherChannel = PusherService.subscribe();
         pusherChannel.bind('refreshContabilidades', data => {
+          this.fillArrDates();
           this.rechargeTable(data.message);
         });
       },

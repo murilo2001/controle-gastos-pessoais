@@ -61,8 +61,6 @@ module.exports = {
             const contabilidade = await Contabilidade.create({
                 nome, tipo, data, valor, usuario_id
             });
-
-            PusherController.pusherPush('refreshContabilidades', data);
             
             return res.status(200).json({
                 status: 1,
@@ -83,8 +81,6 @@ module.exports = {
 
             if (contabilidade) {
                 await Contabilidade.update({ nome, tipo, data, valor }, { where : { id: id } })
-
-                PusherController.pusherPush('refreshContabilidades');
 
                 return res.status(200).json({
                     status: 1,
@@ -110,7 +106,7 @@ module.exports = {
            if (contabilidade) {
                await Contabilidade.destroy({ where: { id } });
                 
-               PusherController.pusherPush('refreshContabilidades');
+               PusherController.pusherPush('refreshContabilidades', contabilidade.data); /* implementar data */
                
                return res.status(200).json({
                 status: 1,

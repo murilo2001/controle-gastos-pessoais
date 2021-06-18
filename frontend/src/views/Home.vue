@@ -137,7 +137,8 @@ export default {
 
   methods: {
 
-    getDateLastRecordRegistered (usuario_id) {
+    /* Resgata ano e mes da ultima contabilidade cadastrada pelo usuário => mais recente */
+    getDateLastRecordRegistered(usuario_id) {
       GraficosService.getLastMonthYear(usuario_id).then(response => {
         if (!response.data.message) {
           this.lastMonthYear = convertHelper.getNomeMesPorExtenso(response.data[0].mes)+'/'+response.data[0].ano;

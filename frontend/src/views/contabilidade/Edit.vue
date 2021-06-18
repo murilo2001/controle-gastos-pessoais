@@ -136,7 +136,6 @@
 
 <script>
 import ContabilidadesService from '@/services/ContabilidadesService';
-import dayjs from 'dayjs';
 
 export default {
   name: 'EditContabilidade',
@@ -166,10 +165,6 @@ export default {
         this.contabilidade = {...response.data};
         this.contabilidade.data = this.parseDate(this.contabilidade.data);
       })
-    },
-
-    formatDate(dateSql) {
-      return dayjs(dateSql).format('YYYY-MM-DD');
     },
 
     parseDate(date) {

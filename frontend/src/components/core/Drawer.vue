@@ -175,9 +175,11 @@
       breadcrumb () {
         let breadCrumbList = this.$route.meta.breadcrumb
         let aux = []
-        breadCrumbList.forEach(element => {
-          aux.push(element.name)
-        });
+        if (breadCrumbList) {
+          breadCrumbList.forEach(element => {
+            aux.push(element.name)
+          });
+        }
         return aux.join(" > ")
       }
     }

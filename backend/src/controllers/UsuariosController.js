@@ -43,15 +43,15 @@ module.exports = {
 
     },
 
-    async index(req, res) {
+    async getAllUsers(req, res) {
         try {
-            const usuario = await Usuario.findAll();
+            const usuarios = await Usuario.findAll();
 
-            if (usuario == "" || usuario == null) {
+            if (usuarios == "" || usuarios == null) {
                 return res.status(200).send({message: "Nenhum usuário encontrado"});
             }
 
-            return res.status(200).send({ usuario });
+            return res.status(200).send({ usuarios });
         } catch (err) {
             return res.status(400).json({ error: err});
         }

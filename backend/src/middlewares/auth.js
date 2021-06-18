@@ -7,7 +7,7 @@ const authConfig = require('../config/auth.json');
 module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    /* Caso o authorization vier vazio = token não existir */
+    /* Caso o authorization vier vazio = token não existe */
     if(!authHeader) {
         return res.status(401).send({error: 'Nenhum token fornecido'});
     }

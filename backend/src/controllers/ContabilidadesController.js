@@ -8,23 +8,23 @@ const path = require('path');
 
 module.exports = {
 
-    async index(req, res) {
-        const { usuario_id } = req.params;
+    // async index(req, res) {
+    //     const { usuario_id } = req.params;
 
-        /* Irá resgatar o usuario cujo PrimaryKey é = usuario_Id e ira trazer também sua associação com a tabela contabilidade */
-        const usuario = await Usuario.findByPk(usuario_id, {
-            include: { association: 'contabilidade'}
-        });
+    //     /* Irá resgatar o usuario cujo PrimaryKey é = usuario_Id e ira trazer também sua associação com a tabela contabilidade */
+    //     const usuario = await Usuario.findByPk(usuario_id, {
+    //         include: { association: 'contabilidade'}
+    //     });
 
-        if (!usuario) {
-            return res.status(400).send({
-                status: 0,
-                message: 'Nenhuma contabilidade encontrada!'
-            });
-        }
+    //     if (!usuario) {
+    //         return res.status(400).send({
+    //             status: 0,
+    //             message: 'Nenhuma contabilidade encontrada!'
+    //         });
+    //     }
 
-        return res.status(200).send(usuario.contabilidade);
-    },
+    //     return res.status(200).send(usuario.contabilidade);
+    // },
 
     async getContabilidade(req, res) {
         const { contabilidade_id } = req.params;
@@ -106,7 +106,7 @@ module.exports = {
            if (contabilidade) {
                await Contabilidade.destroy({ where: { id } });
                 
-               PusherController.pusherPush('refreshContabilidades', contabilidade.data); /* implementar data */
+               PusherController.pusherPush('refreshContabilidades', contabilidade.data);
                
                return res.status(200).json({
                 status: 1,

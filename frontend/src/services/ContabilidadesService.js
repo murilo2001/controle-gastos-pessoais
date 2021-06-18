@@ -3,7 +3,7 @@ import APIService from '@/services/APIService.js'
 export default {
 
   getContabilidade(contabilidade_id) {
-    return APIService.apiCall().get('/contabilidade2/'+contabilidade_id);
+    return APIService.apiCall().get('/getContabilidade/'+contabilidade_id);
   },
 
   postContabilidade(usuario_id, nome, tipo, data, valor) {

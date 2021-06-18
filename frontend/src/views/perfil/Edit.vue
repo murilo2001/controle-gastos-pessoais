@@ -148,12 +148,14 @@ export default {
       }
 
       UsuariosService.putUpdateUser(this.usuario.id, this.nome, this.sobrenome, this.senha).then(() => {
-        this.$toast.success('Informações de perfil atualizadas com sucesso.', '',{position:'topRight'});
         let userdited = this.usuario;
         userdited.nome = this.nome;
         userdited.sobrenome = this.sobrenome;
         localStorage.setItem('user', JSON.stringify(userdited));
+        this.$toast.success('Informações de perfil atualizadas com sucesso.', '',{position:'topRight'});
+        setTimeout(() =>{ location.reload() }, 2000);
       }).catch(error => {
+        this.$toast.error('Erro ao atualizar informações Informações de perfil', '',{position:'topRight'});
         console.error('error: ', error);
       });
     },

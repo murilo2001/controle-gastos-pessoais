@@ -8,17 +8,12 @@ const router = express.Router();
 /* 
     obs: essas duas rotas deixei sem o middleware de auth pois ele não precisam validar o token
 */
-router.post('/usuarios', UsuariosController.store);
 router.post('/usuario/login', UsuariosController.login);
-
-router.get('/usuarios', authMiddleware, UsuariosController.index);
-router.put('/usuario/:usuario_id', authMiddleware, UsuariosController.update);
-router.delete('/usuario/:usuario_id', authMiddleware, UsuariosController.delete);
+router.post('/usuarios/create', UsuariosController.store);
+router.put('/usuario/update/:usuario_id', authMiddleware, UsuariosController.update);
 
 
-router.get('/contabilidade2/:contabilidade_id', authMiddleware, ContabilidadesController.getContabilidade);
-
-router.get('/contabilidade/:usuario_id', authMiddleware, ContabilidadesController.index);
+router.get('/getContabilidade/:contabilidade_id', authMiddleware, ContabilidadesController.getContabilidade);
 router.post('/contabilidade/:usuario_id', authMiddleware, ContabilidadesController.store);
 router.put('/contabilidade/:id', authMiddleware, ContabilidadesController.update);
 router.delete('/contabilidade/:id', authMiddleware, ContabilidadesController.delete);
@@ -30,3 +25,12 @@ router.get('/contabilidade/grafico-resumo/:usuario_id/:ano/:mes', authMiddleware
 router.get('/gerar-planilha/:mes/:ano/:usuario_id', authMiddleware, ContabilidadesController.gerarPlanilha);
 
 module.exports = router;
+
+
+/* ROTAS NÃO UTILIZADAS POREM CRIADAS
+
+router.get('/getAllUsers', authMiddleware, UsuariosController.getAllUsers);
+router.delete('/usuario/delete/:usuario_id', authMiddleware, UsuariosController.delete);
+router.get('/contabilidade/:usuario_id', authMiddleware, ContabilidadesController.index);
+
+*/

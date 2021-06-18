@@ -1,5 +1,9 @@
 import Vue from 'vue';
 import App from './App.vue';
+// import './plugins/base'
+// import './plugins/chartist'
+import './plugins/vee-validate'
+// import './plugins/vue-world-map'
 import vuetify from './plugins/vuetify';
 import router from '@/router';
 import VueTheMask from 'vue-the-mask';

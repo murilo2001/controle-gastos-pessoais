@@ -30,7 +30,7 @@
         <v-btn
           color="#277249"
           class="white--text"
-          @click="gerarXlsx()"
+          @click="gerarPlanilha()"
           width="150px"
           height="35px"
         >
@@ -44,7 +44,7 @@
         </v-btn>
       </v-col>
     </v-row>
-    <tabela-historico :items="itemsTable" @refreshSelectCont="fillArrDates(usuario.id)" />
+    <historico-data-table :items="itemsTable" @refreshSelectCont="fillArrDates(usuario.id)" />
   </v-container>
 </template>
 
@@ -55,16 +55,16 @@
   export default {
     name: 'Historico',
     components: {
-      TabelaHistorico: () => import('@/components/contabilidade/HistoricoTable.vue')
+      HistoricoDataTable: () => import('@/components/contabilidade/HistoricoDataTable.vue')
     },
 
-    async mounted () {
+    async mounted() {
       await this.fillArrDates(this.usuario.id);
       this.rechargeTable();
       this.subscribe();
     },
     
-    data () {
+    data() {
       return {
         arrDatesMesAno: [],
         dateSelected: null,
@@ -86,7 +86,7 @@
         });
       },
       
-      rechargeTable (selectedOption = '') {
+      rechargeTable(selectedOption = '') {
         let mes;
         let ano;
         if(selectedOption != '') {
@@ -130,7 +130,7 @@
         });
       },
 
-      gerarXlsx() {
+      gerarPlanilha() {
         let mes = this.dateSelected.split('/')[0];
         let ano = this.dateSelected.split('/')[1];
 
@@ -148,9 +148,20 @@
     },
 
     computed: {
-      usuario () {
+      usuario() {
         return JSON.parse(localStorage.getItem('user'));
       }
     }
   }
 </script>
+
+<style>
+.v-data-table table thead tr th {
+  font-weight: 600;
+  font-size: 16px !important;
+}
+
+.v-data-table table tbody tr td {
+  font-size: 15px !important;
+}
+</style>

@@ -34,7 +34,7 @@ const router = new Router({
             children: [
               {
                 name: 'Contabilidade',
-                path: '/contabilidade',
+                path: '',
                 component: () => import('@/views/contabilidade/Historico'),
                 meta: {
                   requiresAuth: true,
@@ -42,7 +42,31 @@ const router = new Router({
                     { name: "Contabilidade"}
                   ]
                 },
-              }
+              },
+              {
+                name: 'Contabilidade Editar',
+                path: 'edit/:id',
+                component: () => import('@/views/contabilidade/Edit'),
+                meta: {
+                  requiresAuth: true,
+                  breadcrumb: [
+                    { name: 'Contabilidade' },
+                    { name: 'Editar'}
+                  ]
+                },
+              },
+              {
+                name: 'Contabilidade Cadastrar',
+                path: 'edit',
+                component: () => import('@/views/contabilidade/Edit'),
+                meta: {
+                  requiresAuth: true,
+                  breadcrumb: [
+                    { name: 'Contabilidade' },
+                    { name: 'Cadastrar'}
+                  ]
+                },
+              },
             ],
         },
         {
@@ -51,7 +75,7 @@ const router = new Router({
           children: [
             {
               name: 'Perfil',
-              path: '/perfil',
+              path: '',
               component: () => import('@/views/perfil/Edit.vue'),
               meta: {
                 requiresAuth: true,

@@ -43,7 +43,6 @@ export default {
             return GraficosService.getContabilidadeUserMonthsComparative(usuario_id).then(response => {
                 if (!response.data.message) {
                     response.data.forEach(info => {
-                        console.log('info: ',info);
                         let label = convertHelper.getNomeMesPorExtenso(info.mes)+"/"+info.ano;
                         let checkExistenceArray = this.chartdata.labels.indexOf(label);
                         if (checkExistenceArray == -1) { 

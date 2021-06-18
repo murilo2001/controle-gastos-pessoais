@@ -19,7 +19,7 @@
                 </v-list-item-title>
                 <v-list-item-subtitle>{{lastMonthYear}}</v-list-item-subtitle>
               </v-list-item-content>
-              <span class="btn-card-border" style="background-color: #6c5ce7;">
+              <span class="btn-card-border" style="background-color: #1976D2;">
                 <v-btn
                   class="btn-card-content"
                   color="white"
@@ -52,7 +52,7 @@
                 </v-list-item-title>
                 <v-list-item-subtitle>2021</v-list-item-subtitle>
               </v-list-item-content>
-              <span class="btn-card-border" style="background-color: #0984e3;">
+              <span class="btn-card-border" style="background-color: #1976D2;">
                 <v-btn
                   class="btn-card-content"
                   color="white"
@@ -73,7 +73,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row dense>
+      <v-row dense class="my-0 py-0">
         <v-col>
           <v-card
             class="mx-auto"
@@ -176,5 +176,9 @@ export default {
 .graph-size {
   max-width: 575px;
   max-height: 500px;
+}
+
+.v-card{
+  margin-top: 0px;
 }
 </style>

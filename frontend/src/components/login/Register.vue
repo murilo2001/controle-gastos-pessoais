@@ -78,8 +78,7 @@ export default {
       let inputsIsValid = this.validarCampos();
 
       if (inputsIsValid == true) {
-        UsuariosService.postCreateUser(this.nome, this.sobrenome, this.email,this.senha).then(response => {
-          console.log('rrr: ',response);
+        UsuariosService.postCreateUser(this.nome, this.sobrenome, this.email,this.senha).then(() => {
           this.$emit('changeView', 'login')
           this.$toast.success('Conta cadastrada com sucesso.', '',{position:'topRight'});
         }).catch(error => {

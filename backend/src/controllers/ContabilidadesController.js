@@ -24,7 +24,25 @@ module.exports = {
         }
 
         return res.status(200).send(usuario.contabilidade);
-    }, 
+    },
+
+    async getContabilidade(req, res) {
+        const { contabilidade_id } = req.params;
+
+        /* Irá resgatar o usuario cujo PrimaryKey é = usuario_Id e ira trazer também sua associação com a tabela contabilidade */
+        const contabilidade = await Contabilidade.findByPk(contabilidade_id);
+
+        if (!contabilidade) {
+            return res.status(400).send({
+                status: 0,
+                message: 'Nenhuma contabilidade encontrada!'
+            });
+        }
+
+        return res.status(200).send(contabilidade);
+    },
+
+
 
     async store(req, res) {
         try {

@@ -7,7 +7,7 @@ module.exports = {
     gerarToken(params = {}) {
         /* Irá ser gerado um token com base no id do usuario e no secret */
         return jwt.sign(params, authConfig.secret, {
-            expiresIn: 600, /* 600 segundos = 10 minutos */
+            expiresIn: 1200, /* 1200 segundos = 20 minutos */
         });
     },
 
